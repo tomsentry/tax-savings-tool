@@ -15,6 +15,24 @@ if firebase_credentials:
 else:
     st.error("Firebase credentials not found in environment variables")
 
+# Function to register a new user
+def register_user(email, password):
+    try:
+        user = auth.create_user(email=email, password=password)
+        return user.uid
+    except Exception as e:
+        st.error(f"Error registering user: {e}")
+        return None
+
+# Function to authenticate an existing user
+def authenticate_user(email, password):
+    try:
+        user = auth.get_user_by_email(email)
+        return user.uid
+    except Exception as e:
+        st.error(f"Error authenticating user: {e}")
+        return None
+
 # Function to calculate the monthly savings needed
 def calculate_monthly_savings(initial_savings, payments, start_date):
     total_savings_needed = sum(payment["amount"] for payment in payments) - initial_savings
