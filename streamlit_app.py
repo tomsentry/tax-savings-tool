@@ -17,7 +17,7 @@ def main():
     if st.session_state.page == 1:
         # Page 1: Current savings and remaining payments for the current year
         st.header('Step 1: Current Savings and Payments')
-        initial_savings = st.number_input('Initial Savings (£)', value=35000.0)
+        initial_savings = st.number_input('Initial Savings (£)', value=0.00)
         
         today = datetime.today()
         current_year = today.year
