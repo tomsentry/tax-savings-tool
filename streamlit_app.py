@@ -3,11 +3,10 @@ import firebase_admin
 from firebase_admin import credentials, auth
 import pandas as pd
 from datetime import datetime
-import os
 import json
 
-# Load Firebase credentials from environment variables
-firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
+# Load Firebase credentials from Streamlit secrets
+firebase_credentials = st.secrets["FIREBASE_CREDENTIALS"]
 
 if firebase_credentials:
     cred = credentials.Certificate(json.loads(firebase_credentials))
