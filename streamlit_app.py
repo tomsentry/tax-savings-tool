@@ -1,36 +1,9 @@
 import streamlit as st
-import firebase_admin
-from firebase_admin import credentials, auth
 import pandas as pd
 from datetime import datetime
 import json
 
-# Load Firebase credentials from Streamlit secrets
-firebase_credentials = st.secrets["FIREBASE_CREDENTIALS"]
 
-if firebase_credentials:
-    cred = credentials.Certificate(json.loads(firebase_credentials))
-    firebase_admin.initialize_app(cred)
-else:
-    st.error("Firebase credentials not found in environment variables")
-
-# Function to register a new user
-def register_user(email, password):
-    try:
-        user = auth.create_user(email=email, password=password)
-        return user.uid
-    except Exception as e:
-        st.error(f"Error registering user: {e}")
-        return None
-
-# Function to authenticate an existing user
-def authenticate_user(email, password):
-    try:
-        user = auth.get_user_by_email(email)
-        return user.uid
-    except Exception as e:
-        st.error(f"Error authenticating user: {e}")
-        return None
 
 # Function to calculate the monthly savings needed
 def calculate_monthly_savings(initial_savings, payments, start_date):
