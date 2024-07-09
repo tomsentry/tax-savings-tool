@@ -17,7 +17,7 @@ def main():
     if st.session_state.page == 1:
         # Page 1: Current savings and remaining payments for the current year
         st.header('Step 1: Current Savings and Payments')
-        initial_savings = st.number_input('Initial Savings (£)', value=0.00)
+        initial_savings = st.number_input('Initial Savings (£)', value=35000.0)
         
         today = datetime.today()
         current_year = today.year
@@ -68,11 +68,11 @@ def main():
         
         monthly_savings, total_months = calculate_monthly_savings(initial_savings, payments, today)
         dates = pd.date_range(start=today, periods=total_months, freq='M')
-        savings_plan = pd.DataFrame({"Date": dates, "Monthly Savings Needed": monthly_savings})
+        savings_plan = pd.DataFrame({"Date": dates.strftime('%Y-%m-%d'), "Monthly Savings Needed": monthly_savings})
         savings_plan["Cumulative Savings"] = savings_plan["Monthly Savings Needed"].cumsum() + initial_savings
 
         for payment in payments:
-            savings_plan.loc[savings_plan["Date"] >= payment["date"], "Cumulative Savings"] -= payment["amount"]
+            savings_plan.loc[savings_plan["Date"] >= payment["date"].strftime('%Y-%m-%d'), "Cumulative Savings"] -= payment["amount"]
 
         st.write(savings_plan)
         
