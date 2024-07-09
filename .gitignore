@@ -164,3 +164,5 @@ cython_debug/
 #.idea/firebase_config.json
 firebase_config.json
 .streamlit/secrets.toml
+# .gitignore
+.streamlit/secrets.toml
