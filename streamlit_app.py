@@ -79,11 +79,23 @@ def tax_saving_tool():
 def income_tax_predictor():
     st.header('Income Tax Predictor')
     
-    salary = st.number_input('Annual Salary (£)', value=0.0)
-    dividends = st.number_input('Annual Dividends (£)', value=0.0)
+    today = datetime.today()
+    current_year = today.year
+    start_of_financial_year = datetime(current_year, 4, 6)
+    if today < start_of_financial_year:
+        start_of_financial_year = datetime(current_year - 1, 4, 6)
+    months_elapsed = (today.year - start_of_financial_year.year) * 12 + today.month - start_of_financial_year.month + 1
+    
+    salary_taken = st.number_input('Total Salary Taken to Date (£)', value=0.0)
+    dividends_taken = st.number_input('Total Dividends Taken to Date (£)', value=0.0)
+    salary_this_month = st.number_input('Salary Expected This Month (£)', value=0.0)
+    dividends_this_month = st.number_input('Dividends Expected This Month (£)', value=0.0)
+    savings_to_date = st.number_input('Savings for Tax to Date (£)', value=0.0)
     
     if st.button('Calculate Tax Savings'):
-        total_income = salary + dividends
+        total_salary_estimated = salary_taken + salary_this_month * (12 - months_elapsed)
+        total_dividends_estimated = dividends_taken + dividends_this_month * (12 - months_elapsed)
+        total_income_estimated = total_salary_estimated + total_dividends_estimated
         
         # Simplified tax calculation
         tax_free_allowance = 12500
@@ -94,17 +106,23 @@ def income_tax_predictor():
         higher_rate = 0.40
         additional_rate = 0.45
         
-        if total_income <= tax_free_allowance:
+        if total_income_estimated <= tax_free_allowance:
             tax_due = 0
-        elif total_income <= basic_rate_limit:
-            tax_due = (total_income - tax_free_allowance) * basic_rate
-        elif total_income <= higher_rate_limit:
-            tax_due = (basic_rate_limit - tax_free_allowance) * basic_rate + (total_income - basic_rate_limit) * higher_rate
+        elif total_income_estimated <= basic_rate_limit:
+            tax_due = (total_income_estimated - tax_free_allowance) * basic_rate
+        elif total_income_estimated <= higher_rate_limit:
+            tax_due = (basic_rate_limit - tax_free_allowance) * basic_rate + (total_income_estimated - basic_rate_limit) * higher_rate
         else:
-            tax_due = (basic_rate_limit - tax_free_allowance) * basic_rate + (higher_rate_limit - basic_rate_limit) * higher_rate + (total_income - higher_rate_limit) * additional_rate
+            tax_due = (basic_rate_limit - tax_free_allowance) * basic_rate + (higher_rate_limit - basic_rate_limit) * higher_rate + (total_income_estimated - higher_rate_limit) * additional_rate
         
         st.write(f'Estimated Tax Due: £{tax_due:.2f}')
-        st.write(f'You should put aside approximately £{tax_due / total_income * 100:.2f}% of your income for tax savings.')
+        st.write(f'You should put aside approximately £{tax_due / total_income_estimated * 100:.2f}% of your income for tax savings.')
+        
+        remaining_months = 12 - months_elapsed
+        savings_needed = tax_due - savings_to_date
+        monthly_savings_needed = savings_needed / remaining_months
+        
+        st.write(f'To stay on track, you need to save approximately £{monthly_savings_needed:.2f} per month for the rest of the financial year.')
 
 def main():
     st.title('Tax Savings and Estimation Tools')
