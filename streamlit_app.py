@@ -15,7 +15,7 @@ def tax_saving_tool():
     
     if st.session_state.page == 1:
         st.header('Step 1: Current Savings and Payments')
-        initial_savings = st.number_input('Initial Savings (£)', value=35000.0)
+        initial_savings = st.number_input('Initial Savings (£)', value=0.0)
         
         today = datetime.today()
         current_year = today.year
@@ -115,6 +115,9 @@ def income_tax_predictor():
         else:
             tax_due = (basic_rate_limit - tax_free_allowance) * basic_rate + (higher_rate_limit - basic_rate_limit) * higher_rate + (total_income_estimated - higher_rate_limit) * additional_rate
         
+        st.write(f'Estimated Annual Salary: £{total_salary_estimated:.2f}')
+        st.write(f'Estimated Annual Dividends: £{total_dividends_estimated:.2f}')
+        st.write(f'Estimated Annual Income: £{total_income_estimated:.2f}')
         st.write(f'Estimated Tax Due: £{tax_due:.2f}')
         st.write(f'You should put aside approximately £{tax_due / total_income_estimated * 100:.2f}% of your income for tax savings.')
         
