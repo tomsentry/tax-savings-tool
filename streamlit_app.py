@@ -109,10 +109,14 @@ def income_tax_predictor():
 def main():
     st.title('Tax Savings and Estimation Tools')
     
-    if st.button('Tax Saving Tool'):
+    option = st.selectbox('Select a tool:', ('Home', 'Tax Saving Tool', 'Income Tax Predictor'))
+    
+    if option == 'Tax Saving Tool':
         tax_saving_tool()
-    if st.button('Income Tax Predictor'):
+    elif option == 'Income Tax Predictor':
         income_tax_predictor()
+    else:
+        st.write('Select a tool from the dropdown above.')
 
 if __name__ == '__main__':
     main()
