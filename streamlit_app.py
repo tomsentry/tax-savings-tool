@@ -15,7 +15,7 @@ def tax_saving_tool():
     
     if st.session_state.page == 1:
         st.header('Step 1: Current Savings and Payments')
-        initial_savings = st.number_input('Initial Savings (£)', value=0.0)
+        initial_savings = st.number_input('Initial Savings (£)', value=35000.0)
         
         today = datetime.today()
         current_year = today.year
@@ -127,15 +127,56 @@ def income_tax_predictor():
         
         st.write(f'To stay on track, you need to save approximately £{monthly_savings_needed:.2f} per month for the rest of the financial year.')
 
+def ask_questions():
+    st.header("Find Out Your Tax Saving Persona")
+    
+    questions = [
+        "How often do you set aside money for taxes?",
+        "How do you feel about your current tax preparation process?",
+        "When do you start preparing for your tax payments?",
+        "How knowledgeable are you about tax laws and regulations?",
+        "Do you use any tools or services to help you with tax savings?"
+    ]
+    
+    options = [
+        ("a) I never set aside money.", 1),
+        ("b) I set aside money sporadically.", 2),
+        ("c) I set aside money regularly but without a clear plan.", 3),
+        ("d) I set aside money regularly with a clear plan.", 4),
+        ("e) I use sophisticated strategies to maximize my tax savings.", 5)
+    ]
+    
+    scores = []
+    for question in questions:
+        st.subheader(question)
+        choice = st.radio("", options, index=0, key=question)
+        scores.append(choice[1])
+    
+    total_score = sum(scores)
+    if total_score <= 7:
+        persona = "The Rabbit"
+    elif total_score <= 13:
+        persona = "The Squirrel"
+    elif total_score <= 19:
+        persona = "The Ant"
+    elif total_score <= 24:
+        persona = "The Bee"
+    else:
+        persona = "The Owl"
+    
+    st.write(f"Your persona is: **{persona}**")
+
 def main():
     st.title('Tax Savings and Estimation Tools')
     
-    option = st.selectbox('Select a tool:', ('Home', 'Tax Saving Tool', 'Income Tax Predictor'))
+    option = st.selectbox('Select a tool:', ('Home', 'Tax Saving Tool', 'Income Tax Predictor', 'Find Your Persona'))
     
     if option == 'Tax Saving Tool':
         tax_saving_tool()
     elif option == 'Income Tax Predictor':
         income_tax_predictor()
+    elif option == 'Find Your Persona':
+        ask_questions()
     else:
         st.write('Select a tool from the dropdown above.')
 
